@@ -1,8 +1,8 @@
-project('libpredict', 'c')
+project('predict', 'c')
 
-libpredict_deps = []
+predict_deps = []
 
-libpredict_src = files([
+predict_src = files([
     'src/julian_date.c',
     'src/moon.c',
     'src/observer.c',
@@ -15,15 +15,15 @@ libpredict_src = files([
     'src/version.c',
 ])
 
-libpredict_inc = include_directories('include')
+predict_inc = include_directories('include')
 
-libpredict_lib = static_library('libpredict',
-	sources: libpredict_src,
-	include_directories : libpredict_inc,
-	dependencies : libpredict_deps,
+predict_lib = static_library('predict',
+	sources: predict_src,
+	include_directories : predict_inc,
+	dependencies : predict_deps,
 )
 
-libpredict_dep = declare_dependency(
-	include_directories : libpredict_inc,
-	link_whole : libpredict_lib,
+predict_dep = declare_dependency(
+	include_directories : predict_inc,
+	link_whole : predict_lib,
 )
