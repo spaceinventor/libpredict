@@ -53,33 +53,47 @@ predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char
 	delo=temp/(ao*ao);
 	xnodp=xno/(delo+1.0);
 
-	/* Select a deep-space/near-earth ephemeris */
-	if (TWO_PI/xnodp/MINUTES_PER_DAY >= 0.15625) {
-		m->ephemeris = EPHEMERIS_SDP4;
+    if(xnodp) printf("yay\n");
+
+	/* /\* Select a deep-space/near-earth ephemeris *\/ */
+	/* if (TWO_PI/xnodp/MINUTES_PER_DAY >= 0.15625) { */
+	/* 	m->ephemeris = EPHEMERIS_SDP4; */
 		
-		// Allocate memory for ephemeris data
-		m->ephemeris_data = malloc(sizeof(struct _sdp4));
+	/* 	// Allocate memory for ephemeris data */
+	/* 	m->ephemeris_data = malloc(sizeof(struct _sdp4)); */
 
-		if (m->ephemeris_data == NULL) {
-			predict_destroy_orbital_elements(m);
-			return NULL;
-		}
-		// Initialize ephemeris data structure
-		sdp4_init(m, (struct _sdp4*)m->ephemeris_data);
+	/* 	if (m->ephemeris_data == NULL) { */
+	/* 		predict_destroy_orbital_elements(m); */
+	/* 		return NULL; */
+	/* 	} */
+	/* 	// Initialize ephemeris data structure */
+	/* 	sdp4_init(m, (struct _sdp4*)m->ephemeris_data); */
 
-	} else {
-		m->ephemeris = EPHEMERIS_SGP4;
+	/* } else { */
+	/* 	m->ephemeris = EPHEMERIS_SGP4; */
 		
-		// Allocate memory for ephemeris data
-		m->ephemeris_data = malloc(sizeof(struct _sgp4));
+	/* 	// Allocate memory for ephemeris data */
+	/* 	m->ephemeris_data = malloc(sizeof(struct _sgp4)); */
 
-		if (m->ephemeris_data == NULL) {
-			predict_destroy_orbital_elements(m);
-			return NULL;
-		}
-		// Initialize ephemeris data structure
-		sgp4_init(m, (struct _sgp4*)m->ephemeris_data);
-	}
+	/* 	if (m->ephemeris_data == NULL) { */
+	/* 		predict_destroy_orbital_elements(m); */
+	/* 		return NULL; */
+	/* 	} */
+	/* 	// Initialize ephemeris data structure */
+	/* 	sgp4_init(m, (struct _sgp4*)m->ephemeris_data); */
+	/* } */
+
+    m->ephemeris = EPHEMERIS_SDP4;
+
+    // Allocate memory for ephemeris data
+    m->ephemeris_data = malloc(sizeof(struct _sdp4));
+
+    if (m->ephemeris_data == NULL) {
+      predict_destroy_orbital_elements(m);
+      return NULL;
+    }
+    // Initialize ephemeris data structure
+    sdp4_init(m, (struct _sdp4*)m->ephemeris_data);
 
 	return m;
 }
