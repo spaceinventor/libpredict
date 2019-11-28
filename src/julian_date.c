@@ -13,32 +13,32 @@
  **/
 time_t mktime_utc(const struct tm* timeinfo_utc)
 {
-	time_t curr_time = time(NULL);
-	int timezone_diff = 0; //deviation of the current timezone from UTC in seconds
+	/* time_t curr_time = time(NULL); */
+	/* int timezone_diff = 0; //deviation of the current timezone from UTC in seconds */
 
-	//get UTC time, interpret resulting tm as a localtime
-	struct tm timeinfo_gmt;
-	gmtime_r(&curr_time, &timeinfo_gmt);
-	time_t time_gmt = mktime(&timeinfo_gmt);
+	/* //get UTC time, interpret resulting tm as a localtime */
+	/* struct tm timeinfo_gmt; */
+	/* gmtime_r(&curr_time, &timeinfo_gmt); */
+	/* time_t time_gmt = mktime(&timeinfo_gmt); */
 
-	//get localtime, interpret resulting tm as localtime
-	struct tm timeinfo_local;
-	localtime_r(&curr_time, &timeinfo_local);
-	time_t time_local = mktime(&timeinfo_local);
+	/* //get localtime, interpret resulting tm as localtime */
+	/* struct tm timeinfo_local; */
+	/* localtime_r(&curr_time, &timeinfo_local); */
+	/* time_t time_local = mktime(&timeinfo_local); */
 
-	//find the time difference between the two interpretations
-	timezone_diff += difftime(time_local, time_gmt);
+	/* //find the time difference between the two interpretations */
+	/* timezone_diff += difftime(time_local, time_gmt); */
 
-	//hack for preventing mktime from assuming localtime: add timezone difference to the input struct.
-	struct tm ret_timeinfo;
-	ret_timeinfo.tm_sec = timeinfo_utc->tm_sec + timezone_diff;
-	ret_timeinfo.tm_min = timeinfo_utc->tm_min;
-	ret_timeinfo.tm_hour = timeinfo_utc->tm_hour;
-	ret_timeinfo.tm_mday = timeinfo_utc->tm_mday;
-	ret_timeinfo.tm_mon = timeinfo_utc->tm_mon;
-	ret_timeinfo.tm_year = timeinfo_utc->tm_year;
-	ret_timeinfo.tm_isdst = timeinfo_utc->tm_isdst;
-	return mktime(&ret_timeinfo);
+	/* //hack for preventing mktime from assuming localtime: add timezone difference to the input struct. */
+	/* struct tm ret_timeinfo; */
+	/* ret_timeinfo.tm_sec = timeinfo_utc->tm_sec + timezone_diff; */
+	/* ret_timeinfo.tm_min = timeinfo_utc->tm_min; */
+	/* ret_timeinfo.tm_hour = timeinfo_utc->tm_hour; */
+	/* ret_timeinfo.tm_mday = timeinfo_utc->tm_mday; */
+	/* ret_timeinfo.tm_mon = timeinfo_utc->tm_mon; */
+	/* ret_timeinfo.tm_year = timeinfo_utc->tm_year; */
+	/* ret_timeinfo.tm_isdst = timeinfo_utc->tm_isdst; */
+	/* return mktime(&ret_timeinfo); */
 }
 
 /**

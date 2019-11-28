@@ -170,7 +170,7 @@ bool predict_aos_happens(const predict_orbital_elements_t *m, double latitude)
 int predict_orbit(const predict_orbital_elements_t *orbital_elements, struct predict_position *m, double utc)
 {
 	/* Set time to now if now time is provided: */
-	if (utc == 0) utc = predict_to_julian(time(NULL));
+	/* if (utc == 0) utc = predict_to_julian(time(NULL)); */
 	
 	/* Satellite position and velocity vectors */
 	vec3_set(m->position, 0, 0, 0);
