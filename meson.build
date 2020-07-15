@@ -25,5 +25,11 @@ predict_lib = static_library('predict',
 
 predict_dep = declare_dependency(
 	include_directories : predict_inc,
+	link_with : predict_lib,
+)
+
+
+predict_dep_whole = declare_dependency(
+	include_directories : predict_inc,
 	link_whole : predict_lib,
 )
