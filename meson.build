@@ -3,7 +3,6 @@ project('predict', 'c')
 predict_deps = []
 
 predict_src = files([
-    'src/julian_date.c',
     'src/moon.c',
     'src/observer.c',
     'src/orbit.c',
