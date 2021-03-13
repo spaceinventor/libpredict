@@ -1,4 +1,4 @@
-#include "sdp4.h"
+#include <predict/sdp4.h>
 
 #include <math.h>
 #include <stdbool.h>

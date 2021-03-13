@@ -1,4 +1,4 @@
-#include "sgp4.h"
+#include <predict/sgp4.h>
 
 #include "defs.h"
 #include "unsorted.h"

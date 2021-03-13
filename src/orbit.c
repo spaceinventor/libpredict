@@ -1,11 +1,11 @@
 #include <math.h>
 #include <string.h>
 
+#include <predict/sdp4.h>
+#include <predict/sgp4.h>
+#include <predict/sun.h>
 #include "defs.h"
 #include "unsorted.h"
-#include "sdp4.h"
-#include "sgp4.h"
-#include "sun.h"
 
 bool is_eclipsed(const double pos[3], const double sol[3], double *depth);
 bool predict_decayed(const predict_orbital_elements_t *orbital_elements, predict_julian_date_t time);
@@ -13,11 +13,9 @@ bool predict_decayed(const predict_orbital_elements_t *orbital_elements, predict
 //length of buffer used for extracting subsets of TLE strings for parsing
 #define SUBSTRING_BUFFER_LENGTH 50
 
-predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char *tle_line_2)
+void predict_parse_tle(predict_orbital_elements_t * m, void * ephem_model, const char *tle_line_1, const char *tle_line_2)
 {
 	double tempnum;
-	predict_orbital_elements_t *m = (predict_orbital_elements_t*)malloc(sizeof(predict_orbital_elements_t));
-	if (m == NULL) return NULL;
 
 	char substring_buffer[SUBSTRING_BUFFER_LENGTH];
 	m->satellite_number = atol(SubString(tle_line_1,SUBSTRING_BUFFER_LENGTH,substring_buffer,2,6));
@@ -83,30 +81,14 @@ predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char
 	/* 	sgp4_init(m, (struct _sgp4*)m->ephemeris_data); */
 	/* } */
 
+
+    // We grap ephemeris data storage from arguments
     m->ephemeris = EPHEMERIS_SDP4;
+    m->ephemeris_data = ephem_model;
 
-    // Allocate memory for ephemeris data
-    m->ephemeris_data = malloc(sizeof(struct _sdp4));
-
-    if (m->ephemeris_data == NULL) {
-      predict_destroy_orbital_elements(m);
-      return NULL;
-    }
     // Initialize ephemeris data structure
     sdp4_init(m, (struct _sdp4*)m->ephemeris_data);
 
-	return m;
-}
-
-void predict_destroy_orbital_elements(predict_orbital_elements_t *m)
-{
-	if (m == NULL) return;
-
-	if (m->ephemeris_data != NULL) {
-		free(m->ephemeris_data);
-	}
-
-	free(m);
 }
 
 bool predict_is_geosynchronous(const predict_orbital_elements_t *m)

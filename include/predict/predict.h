@@ -129,13 +129,7 @@ typedef struct {
  * \return Processed TLE parameters
  * \copyright GPLv2+
  **/
-predict_orbital_elements_t* predict_parse_tle(const char *tle_line_1, const char *tle_line_2);
-
-/**
- * Free memory allocated in orbital elements structure.
- * \param orbital_elements Orbit to free
- **/
-void predict_destroy_orbital_elements(predict_orbital_elements_t *orbital_elements);
+void predict_parse_tle(predict_orbital_elements_t * m, void * ephem_model, const char *tle_line_1, const char *tle_line_2);
 
 /**
  * Predicted orbital values for satellite at a given time.

@@ -1,9 +1,9 @@
 #include <predict/predict.h>
+#include <predict/sun.h>
 #include "unsorted.h"
 #include <stdlib.h>
 #include <string.h>
 #include "defs.h"
-#include "sun.h"
 
 void observer_calculate(const predict_observer_t *observer, double time, const double pos[3], const double vel[3], struct predict_observation *result);
 

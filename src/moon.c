@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "defs.h"
-#include "sun.h"
+#include <predict/sun.h>
 
 /**
  * This function reduces angles greater than two pi by subtracting two pi

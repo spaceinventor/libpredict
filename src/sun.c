@@ -1,4 +1,4 @@
-#include "sun.h"
+#include <predict/sun.h>
 #include "unsorted.h"
 #include "defs.h"
 
