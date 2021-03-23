@@ -36,6 +36,7 @@ void predict_parse_tle(predict_orbital_elements_t * m, void * ephem_model, const
 	m->bstar_drag_term = tempnum/pow(10.0,(tle_line_1[60]-'0'));
 	m->revolutions_at_epoch = atof(SubString(tle_line_2,SUBSTRING_BUFFER_LENGTH,substring_buffer,63,67));
 
+#if 0
 	/* Period > 225 minutes is deep space */
 	double ao, xnodp, dd1, dd2, delo, a1, del1, r1;
 	double temp = TWO_PI/MINUTES_PER_DAY/MINUTES_PER_DAY;
@@ -51,43 +52,45 @@ void predict_parse_tle(predict_orbital_elements_t * m, void * ephem_model, const
 	delo=temp/(ao*ao);
 	xnodp=xno/(delo+1.0);
 
-    if(xnodp) printf("yay\n");
-
-	/* /\* Select a deep-space/near-earth ephemeris *\/ */
-	/* if (TWO_PI/xnodp/MINUTES_PER_DAY >= 0.15625) { */
-	/* 	m->ephemeris = EPHEMERIS_SDP4; */
+	 /\* Select a deep-space/near-earth ephemeris *\/
+	 if (TWO_PI/xnodp/MINUTES_PER_DAY >= 0.15625) {
+	 	m->ephemeris = EPHEMERIS_SDP4;
 		
-	/* 	// Allocate memory for ephemeris data */
-	/* 	m->ephemeris_data = malloc(sizeof(struct _sdp4)); */
+	 	// Allocate memory for ephemeris data
+	 	m->ephemeris_data = malloc(sizeof(struct _sdp4));
 
-	/* 	if (m->ephemeris_data == NULL) { */
-	/* 		predict_destroy_orbital_elements(m); */
-	/* 		return NULL; */
-	/* 	} */
-	/* 	// Initialize ephemeris data structure */
-	/* 	sdp4_init(m, (struct _sdp4*)m->ephemeris_data); */
+	 	if (m->ephemeris_data == NULL) {
+	 		predict_destroy_orbital_elements(m);
+	 		return NULL;
+	 	}
+	 	// Initialize ephemeris data structure
+	 	sdp4_init(m, (struct _sdp4*)m->ephemeris_data);
 
-	/* } else { */
-	/* 	m->ephemeris = EPHEMERIS_SGP4; */
+	 } else {
+	 	m->ephemeris = EPHEMERIS_SGP4;
 		
-	/* 	// Allocate memory for ephemeris data */
-	/* 	m->ephemeris_data = malloc(sizeof(struct _sgp4)); */
+	 	// Allocate memory for ephemeris data
+	 	m->ephemeris_data = malloc(sizeof(struct _sgp4));
 
-	/* 	if (m->ephemeris_data == NULL) { */
-	/* 		predict_destroy_orbital_elements(m); */
-	/* 		return NULL; */
-	/* 	} */
-	/* 	// Initialize ephemeris data structure */
-	/* 	sgp4_init(m, (struct _sgp4*)m->ephemeris_data); */
-	/* } */
+	 	if (m->ephemeris_data == NULL) {
+	 		predict_destroy_orbital_elements(m);
+	 		return NULL;
+	 	}
+	 	// Initialize ephemeris data structure
+	 	sgp4_init(m, (struct _sgp4*)m->ephemeris_data);
+	 }
+#endif
 
+	/**
+	 * FORCE SGP4
+	 */
 
     // We grap ephemeris data storage from arguments
-    m->ephemeris = EPHEMERIS_SDP4;
+    m->ephemeris = EPHEMERIS_SGP4;
     m->ephemeris_data = ephem_model;
 
     // Initialize ephemeris data structure
-    sdp4_init(m, (struct _sdp4*)m->ephemeris_data);
+    sgp4_init(m, (struct _sgp4*)m->ephemeris_data);
 
 }
 
