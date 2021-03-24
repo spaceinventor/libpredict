@@ -173,9 +173,11 @@ int predict_orbit(const predict_orbital_elements_t *orbital_elements, struct pre
 	/* Call NORAD routines according to deep-space flag. */
 	struct model_output output;
 	switch (orbital_elements->ephemeris) {
+#if 0
 		case EPHEMERIS_SDP4:
 			sdp4_predict((struct _sdp4*)orbital_elements->ephemeris_data, tsince, &output);
 			break;
+#endif
 		case EPHEMERIS_SGP4:
 			sgp4_predict((struct _sgp4*)orbital_elements->ephemeris_data, tsince, &output);
 			break;
