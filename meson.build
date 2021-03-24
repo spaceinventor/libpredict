@@ -1,7 +1,5 @@
 project('predict', 'c')
 
-predict_deps = []
-
 predict_src = files([
     'src/moon.c',
     'src/observer.c',
@@ -15,6 +13,8 @@ predict_src = files([
 ])
 
 predict_inc = include_directories('include')
+
+predict_deps = dependency('picolibc', fallback: ['picolibc', 'picolibc_dep'], required: false)
 
 predict_lib = static_library('predict',
 	sources: predict_src,
