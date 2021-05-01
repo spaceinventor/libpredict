@@ -40,7 +40,7 @@ double Degrees(double arg)
 
 void sun_predict(double time, double position[3])
 {
-	double jul_utc = time;// + JULIAN_TIME_DIFF;
+	double jul_utc = time + JULIAN_TIME_DIFF;
 	double mjd = jul_utc - 2415020.0;
 	double year = 1900 + mjd / 365.25;
 	double T = (mjd + Delta_ET(year) / SECONDS_PER_DAY) / 36525.0;
