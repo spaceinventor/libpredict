@@ -171,6 +171,8 @@ struct predict_position {
 	double argument_of_perigee;
 };
 
+int orekit_update_orbit(const predict_orbital_elements_t *orbital_elements, struct predict_position *m, double utc, float *param_arr);
+
 /**
  * Main prediction function. Predict satellite orbit at given time. 
  * \param orbital_elements Orbital elements

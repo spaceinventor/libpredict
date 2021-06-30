@@ -230,6 +230,68 @@ int predict_orbit(const predict_orbital_elements_t *orbital_elements, struct pre
 	return 0;
 }
 
+/* Similar to predict_orbit, but uses orekit data to predict the orbit (rather than spg4) */
+int orekit_update_orbit(const predict_orbital_elements_t *orbital_elements, struct predict_position *m, double utc, float *param_arr) {
+
+	/* Satellite position and velocity vectors */
+	vec3_set(m->position, 0, 0, 0);
+	vec3_set(m->velocity, 0, 0, 0);
+
+	m->time = utc;
+	double julTime = utc + JULIAN_TIME_DIFF;
+
+	/* Convert satellite's epoch time to Julian  */
+	/* and calculate time since epoch in minutes */
+	double epoch = 1000.0*orbital_elements->epoch_year + orbital_elements->epoch_day;
+	double jul_epoch = Julian_Date_of_Epoch(epoch);
+
+	int i = 0;
+
+	m->position[0] = *(param_arr + i++);  // Index 0
+	m->position[1] = *(param_arr + i++);  // Index 1
+	m->position[2] = *(param_arr + i++);  // Index 2
+
+	m->velocity[0] = *(param_arr + i++);  // Index 3
+	m->velocity[1] = *(param_arr + i++);  // Index 4
+	m->velocity[2] = *(param_arr + i++);  // Index 5
+
+	// TODO Kevin: Set phase
+
+	m->argument_of_perigee = *(param_arr + i++);  // Index 6
+	m->inclination = *(param_arr + i++);  // Index 7
+	m->right_ascension = *(param_arr + i++);  // Index 8
+
+	/* Calculate satellite Lat North, Lon East and Alt. */
+	geodetic_t sat_geodetic;
+	Calculate_LatLonAlt(utc, m->position, &sat_geodetic);
+
+	m->latitude = sat_geodetic.lat;
+	m->longitude = sat_geodetic.lon;
+	m->altitude = sat_geodetic.alt;
+
+	// Calculate solar position
+	double solar_vector[3];
+	sun_predict(m->time, solar_vector);
+
+	// Find eclipse depth and if sat is eclipsed
+	m->eclipsed = is_eclipsed(m->position, solar_vector, &m->eclipse_depth);
+
+	// Calculate footprint
+	m->footprint = 2.0*EARTH_RADIUS_KM_WGS84*acos(EARTH_RADIUS_KM_WGS84/(EARTH_RADIUS_KM_WGS84 + m->altitude));
+
+	// Calculate current number of revolutions around Earth
+	double temp = TWO_PI/MINUTES_PER_DAY/MINUTES_PER_DAY;
+	double age = julTime - jul_epoch;
+	double xno = orbital_elements->mean_motion*temp*MINUTES_PER_DAY;
+	double xmo = orbital_elements->mean_anomaly * M_PI / 180.0;
+	m->revolutions = (long)floor((xno*MINUTES_PER_DAY/(M_PI*2.0) + age*orbital_elements->bstar_drag_term)*age + xmo/(2.0*M_PI)) + orbital_elements->revolutions_at_epoch;
+
+	//calculate whether orbit is decayed
+	m->decayed = predict_decayed(orbital_elements, utc);
+
+	return 0;
+}
+
 bool predict_decayed(const predict_orbital_elements_t *orbital_elements, predict_julian_date_t time)
 {
 	double satepoch;
