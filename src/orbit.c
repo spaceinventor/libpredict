@@ -231,11 +231,7 @@ int predict_orbit(const predict_orbital_elements_t *orbital_elements, struct pre
 }
 
 /* Similar to predict_orbit, but uses orekit data to predict the orbit (rather than spg4) */
-int orekit_update_orbit(const predict_orbital_elements_t *orbital_elements, struct predict_position *m, double utc, float *param_arr) {
-
-	/* Satellite position and velocity vectors */
-	vec3_set(m->position, 0, 0, 0);
-	vec3_set(m->velocity, 0, 0, 0);
+int orekit_update_orbit(const predict_orbital_elements_t *orbital_elements, struct predict_position *m, double utc) {
 
 	m->time = utc;
 	double julTime = utc + JULIAN_TIME_DIFF;
@@ -244,22 +240,6 @@ int orekit_update_orbit(const predict_orbital_elements_t *orbital_elements, stru
 	/* and calculate time since epoch in minutes */
 	double epoch = 1000.0*orbital_elements->epoch_year + orbital_elements->epoch_day;
 	double jul_epoch = Julian_Date_of_Epoch(epoch);
-
-	int i = 0;
-
-	m->position[0] = *(param_arr + i++);  // Index 0
-	m->position[1] = *(param_arr + i++);  // Index 1
-	m->position[2] = *(param_arr + i++);  // Index 2
-
-	m->velocity[0] = *(param_arr + i++);  // Index 3
-	m->velocity[1] = *(param_arr + i++);  // Index 4
-	m->velocity[2] = *(param_arr + i++);  // Index 5
-
-	// TODO Kevin: Set phase
-
-	m->argument_of_perigee = *(param_arr + i++);  // Index 6
-	m->inclination = *(param_arr + i++);  // Index 7
-	m->right_ascension = *(param_arr + i++);  // Index 8
 
 	/* Calculate satellite Lat North, Lon East and Alt. */
 	geodetic_t sat_geodetic;
